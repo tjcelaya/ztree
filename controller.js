@@ -6,11 +6,19 @@ function AppController() {
         staq: staq,
         newFrame: newFrame,
         handlePush: function (e) {
-            staq.push(newFrame())
-            newFrame('')
+            try {
+                staq.push(newFrame())
+                newFrame('')
+            } catch (e) {
+                staq.error(e)
+            }
         },
         handlePop: function (e) {
-            staq.pop()
+            try {
+                staq.pop()
+            } catch (e) {
+                staq.error(e)
+            }
         }
     }
 }
