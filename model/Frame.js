@@ -46,7 +46,7 @@ Frame.prototype.toMithril = function (showClosed) {
     var mappedchildViews = []
     var reducedchildViews = []
     var els = [m('li', {
-        style: "color: " + (this.closed_at() ? "grey" : "black")
+        class: this.closed_at() ? "closed" : "open"
     }, this.label())]
 
     if (childArray.length) {
