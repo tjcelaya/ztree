@@ -19,6 +19,11 @@ function AppView(ctrl) {
                 }, 'pop'),
             ]),
         ]),
-        m('pre', JSON.stringify(ctrl.staq, null, 4))
+        m('.row', [
+            m('.column.one-half', ctrl.staq.toMithril()),
+            m('.column.one-half', [
+                m('pre', JSON.stringify(ctrl.staq, null, 4))
+            ]),
+        ]),
     ]);
 }

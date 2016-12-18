@@ -4,7 +4,7 @@ function Staq() {
     this.goal = m.prop('')
     var id = 0
     this.nextId = function () {
-        return id++
+         return id++
     }
 }
 
@@ -46,4 +46,13 @@ Staq.prototype.toJSON = function () {
         goal: this.goal(),
         stack: this.store()
     }
+}
+
+Staq.prototype.toMithril = function() {
+    var s = this.store()
+
+    if (s.length === 0)
+        return m('p', 'empty')
+
+    return m('ul', s[s.length - 1].toMithril())
 }

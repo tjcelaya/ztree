@@ -40,3 +40,19 @@ Frame.prototype.pendingChild = function () {
 Frame.prototype.isClosed = function () {
     return this.closed_at() && this.childrenClosed()
 }
+
+Frame.prototype.toMithril = function () {
+    var childArray = this.children()
+    var els = [m('li', {
+        style: "color: " + (this.closed_at() ? "grey" : "black")
+    }, this.label())]
+
+    if (childArray.length) {
+        var childFrames = childArray.map(function (childFrame) {
+            return childFrame.toMithril()
+        })
+        els.push(m('ul', childFrames))
+    }
+
+    return els
+}
