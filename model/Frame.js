@@ -41,15 +41,24 @@ Frame.prototype.isClosed = function () {
     return this.closed_at() && this.childrenClosed()
 }
 
-Frame.prototype.toMithril = function () {
+Frame.prototype.toMithril = function (showClosed) {
     var childArray = this.children()
+    var mappedchildViews = []
+    var reducedchildViews = []
     var els = [m('li', {
         style: "color: " + (this.closed_at() ? "grey" : "black")
     }, this.label())]
 
     if (childArray.length) {
+        console.log('showClosed',showClosed)
+        if (!showClosed) {
+            childArray = childArray.filter(function (cF) {
+                return !cF.closed_at()
+            })
+        }
+
         var childFrames = childArray.map(function (childFrame) {
-            return childFrame.toMithril()
+            return childFrame.toMithril(showClosed)
         })
         els.push(m('ul', childFrames))
     }

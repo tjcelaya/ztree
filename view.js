@@ -8,9 +8,9 @@ function AppView(ctrl) {
                 }, 'pop'),
             ]),
             m('.column.one-half', [
-                m("input.u-full-width", {
+                m('input.u-full-width', {
                     type: 'text',
-                    oninput: m.withAttr("value", ctrl.newFrame),
+                    oninput: m.withAttr('value', ctrl.newFrame),
                     value: ctrl.newFrame()
                 }),
             ]),
@@ -22,7 +22,18 @@ function AppView(ctrl) {
             ]),
         ]),
         m('.row', [
-            m('.column.one-half', ctrl.staq.toMithril()),
+            m('.column.one-half', [
+                m('label', [
+                    m("input", {
+                        key: 1,
+                        type: "checkbox",
+                        onclick: ctrl.handleShowCompletedToggle,
+                        checked: ctrl.showClosed()
+                    }),
+                    m('span.label-body', 'Show Closed'),
+                ]),
+                ctrl.staq.toMithril(ctrl.showClosed()),
+            ]),
             m('.column.one-half', [
                 m('pre', JSON.stringify(ctrl.staq, null, 4))
             ]),
