@@ -1,0 +1,9 @@
+[submodule "vendor/lhorie/mithril.js"]
+	path = vendor/lhorie/mithril.js
+	url = git@github.com:lhorie/mithril.js.git
+[submodule "vendor/dhg/Skeleton"]
+	path = vendor/dhg/Skeleton
+	url = git@github.com:dhg/Skeleton.git
+[submodule "vendor/skeleton-framework/skeleton-framework"]
+	path = vendor/skeleton-framework/skeleton-framework
+	url = git@github.com:skeleton-framework/skeleton-framework.git
