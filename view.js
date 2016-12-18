@@ -22,19 +22,34 @@ function AppView(ctrl) {
             ]),
         ]),
         m('.row', [
-            m('.column.one-half', [
-                m('label', [
-                    m("input", {
-                        key: 1,
-                        type: "checkbox",
-                        onclick: ctrl.handleShowCompletedToggle,
-                        checked: ctrl.showClosed()
-                    }),
-                    m('span.label-body', 'Show Closed'),
-                ]),
+            m('label.column.one-half', [
+                m("input", {
+                    key: 1,
+                    type: "checkbox",
+                    onclick: ctrl.handleShowClosedToggle,
+                    checked: ctrl.showClosed()
+                }),
+                m('span.label-body', 'Show Closed'),
+            ]),
+            m('label.column.one-half', [
+                m("input", {
+                    key: 1,
+                    type: "checkbox",
+                    onclick: ctrl.handleShowDebugToggle,
+                    checked: ctrl.showDebug()
+                }),
+                m('span.label-body', 'Show Debug'),
+            ]),
+        ]),
+        m('.row', [
+            m('.column', {
+                class: ctrl.showDebug() ? 'one-half' : 'u-full-width'
+            },[
                 ctrl.staq.toMithril(ctrl.showClosed()),
             ]),
-            m('.column.one-half', [
+            m('.column', {
+                class: ctrl.showDebug() ? 'one-half' : 'u-hide'
+            },[
                 m('pre', JSON.stringify(ctrl.staq, null, 4))
             ]),
         ]),
