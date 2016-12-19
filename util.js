@@ -14,7 +14,7 @@ Util.findCurrentFrame = function (frame) {
     let lastborn = children[children.length - 1]
 
     if (frame.isClosed()) {
-        throw 'should\'nt arrive at a closed frame'
+        throw 'shouldn\'t arrive at a closed frame'
     }
 
     // frame is open and has no children OR last child is closed

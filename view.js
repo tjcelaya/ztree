@@ -1,6 +1,12 @@
 function AppView(ctrl) {
 
-    return m('form.container', [
+    return m('form.container', {
+        onsubmit: function () {
+            ctrl.handlePush()
+            ctrl.handlePop()
+            return false
+        }
+    }, [
         m('.row', [
             m('.column.one-quarter', [
                 m('button.button-primary.u-full-width', {
