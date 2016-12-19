@@ -22,23 +22,35 @@ function AppView(ctrl) {
             ]),
         ]),
         m('.row', [
-            m('label.column.one-half', [
-                m("input", {
-                    key: 1,
-                    type: "checkbox",
-                    onclick: ctrl.handleShowClosedToggle,
-                    checked: ctrl.showClosed()
-                }),
-                m('span.label-body', 'Show Closed'),
+            m('.column.one-quarter', [
+                m('label', [
+                    m("input", {
+                        key: 1,
+                        type: "checkbox",
+                        onclick: ctrl.handleShowClosedToggle,
+                        checked: ctrl.showClosed()
+                    }),
+                    m('span.label-body', 'Show Closed'),
+                ]),
             ]),
-            m('label.column.one-half', [
-                m("input", {
-                    key: 1,
-                    type: "checkbox",
-                    onclick: ctrl.handleShowDebugToggle,
-                    checked: ctrl.showDebug()
+            m('.column.one-quarter', [
+                m('label', [
+                    m("input", {
+                        key: 1,
+                        type: "checkbox",
+                        onclick: ctrl.handleShowDebugToggle,
+                        checked: ctrl.showDebug()
+                    }),
+                    m('span.label-body', 'Show Debug'),
+                ]),
+            ]),
+            m('.column.one-quarter', [
+                m('span', ctrl.lastMessage()),
+            ]),
+            m('.column.one-quarter', [
+                m('.g-signin2.u-pull-right', {
+                    'data-onsuccess': 'GSignin2Handler'
                 }),
-                m('span.label-body', 'Show Debug'),
             ]),
         ]),
         m('.row', [

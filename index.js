@@ -4,4 +4,10 @@ var app = {
 };
 
 //initialize
-m.mount(document.getElementById('app'), app);
+var appInst = m.mount(document.getElementById('app'), app);
+
+
+function GSignin2Handler(googleUser) {
+  appInst.googleUser(googleUser)
+  m.redraw()
+}
