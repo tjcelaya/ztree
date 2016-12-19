@@ -1,6 +1,0 @@
-[submodule "vendor/lhorie/mithril.js"]
-	path = vendor/lhorie/mithril.js
-	url = https://git@github.com:lhorie/mithril.js.git
-[submodule "vendor/skeleton-framework/skeleton-framework"]
-	path = vendor/skeleton-framework/skeleton-framework
-	url = https://github.com:skeleton-framework/skeleton-framework.git
