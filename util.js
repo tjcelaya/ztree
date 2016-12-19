@@ -1,5 +1,9 @@
 const Util = {}
 
+Util.AuthHandler = function () {
+    debugger
+}
+
 Util.ISONow = function () {
     return (new Date).toISOString()
 }
