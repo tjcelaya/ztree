@@ -2,8 +2,8 @@ function AppView(ctrl) {
 
     return m('form.container', {
         onsubmit: function () {
-            ctrl.handlePush()
             ctrl.handlePop()
+            ctrl.handlePush()
             return false
         }
     }, [
