@@ -7,7 +7,7 @@ function AppView(ctrl) {
             return false
         }
     }, [
-        m('.row', [
+        m('.le-input.row', [
             m('.column.one-quarter', [
                 m('button.button-primary.u-full-width', {
                     type: 'button',
@@ -28,7 +28,7 @@ function AppView(ctrl) {
                 }, 'push'),
             ]),
         ]),
-        m('.row', [
+        m('.le-extras.row.u-hide', [
             m('.column.one-quarter', [
                 m('label', [
                     m("input", {
@@ -73,7 +73,7 @@ function AppView(ctrl) {
                 m('#signin.u-pull-right')
             ]),
         ]),
-        m('.row', [
+        m('.le-output.row', [
             m('.column', {
                 class: ctrl.showDebug() ? 'one-half' : 'u-full-width'
             },[
