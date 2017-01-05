@@ -28,7 +28,7 @@ function AppView(ctrl) {
                 }, 'push'),
             ]),
         ]),
-        m('.le-extras.row.u-hide', [
+        m('.le-extras.row', [
             m('.column.one-quarter', [
                 m('label', [
                     m("input", {
@@ -40,7 +40,7 @@ function AppView(ctrl) {
                     m('span.label-body', 'Show Closed'),
                 ]),
             ]),
-            m('.column.one-quarter', [
+            m('.column.one-quarter.u-hide', [
                 m('label', [
                     m("input", {
                         key: 1,
@@ -51,10 +51,10 @@ function AppView(ctrl) {
                     m('span.label-body', 'Show Debug'),
                 ]),
             ]),
-            m('.column.one-quarter', [
+            m('.column.one-quarter.u-hide', [
                 m('span', ctrl.lastMessage()),
             ]),
-            m('.column', {
+            m('.column.u-hide', {
                 'class': (ctrl.isSignedIn() ? 'three' : 'u-hide'),
             },[
                 m('button', {
@@ -67,7 +67,7 @@ function AppView(ctrl) {
                     onclick: ctrl.handleSignoutClick
                 }, 'Sign Out'),
             ]),
-            m('.column.three', {
+            m('.column.three.u-hide', {
                 'class': (ctrl.isSignedIn() ? 'u-hide' : ''),
             },[
                 m('#signin.u-pull-right')
