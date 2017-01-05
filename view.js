@@ -2,7 +2,12 @@ function AppView(ctrl) {
 
     return m('form.container', {
         onsubmit: function () {
-            ctrl.handlePop()
+
+            if (1 == ctrl.staq.depth() && !ctrl.shiftHeld()) {
+                console.log('popping current since detect shift')
+                ctrl.handlePop()
+            }
+
             ctrl.handlePush()
             return false
         }
@@ -18,7 +23,14 @@ function AppView(ctrl) {
                 m('input.u-full-width', {
                     type: 'text',
                     oninput: m.withAttr('value', ctrl.newFrame),
-                    value: ctrl.newFrame()
+                    value: ctrl.newFrame(),
+                    config: function (el, skipBinding, cxt) {
+                        if (skipBinding) return;
+
+                        el.addEventListener('keydown', function (e) {
+                            ctrl.shiftHeld(e.shiftKey)
+                        })
+                    }
                 }),
             ]),
             m('.column.one-quarter', [
@@ -40,7 +52,7 @@ function AppView(ctrl) {
                     m('span.label-body', 'Show Closed'),
                 ]),
             ]),
-            m('.column.one-quarter.u-hide', [
+            m('.column.one-quarter', [
                 m('label', [
                     m("input", {
                         key: 1,

@@ -8,7 +8,9 @@ Util.ISONow = function () {
     return (new Date).toISOString()
 }
 
-Util.findCurrentFrame = function (frame) {
+Util.queryCurrentFrame = function (frame, depth) {
+    depth = depth || 0
+
     if (!frame || !frame instanceof Frame) throw 'no frame given'
     let children = frame.children()
     let lastborn = children[children.length - 1]
@@ -22,8 +24,15 @@ Util.findCurrentFrame = function (frame) {
         || lastborn.isClosed()
     ) {
         console.log('found current frame ' + frame.id)
-        return frame
+        return {
+            frame: frame,
+            depth: depth
+        }
     }
 
-    return this.findCurrentFrame(lastborn)
+    return Util.queryCurrentFrame(lastborn, depth + 1)
+}
+
+Util.formatDuration = function (seconds) {
+    return seconds < 60 ? (seconds + 's') : moment.duration(seconds).humanize()
 }

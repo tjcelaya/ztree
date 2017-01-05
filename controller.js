@@ -7,6 +7,9 @@ function AppController() {
     var googleUser = m.prop(null)
     var gapiStore = m.prop(null)
     var driveEnabled = m.prop(false)
+    var shiftHeld = m.prop(false)
+
+    staq.push('main')
 
     // var store = new Store()
     function handleSignInWithGoogleUser(gUser) {
@@ -35,6 +38,7 @@ function AppController() {
         lastMessage: lastMessage,
         gapiStore: gapiStore,
         driveEnabled: driveEnabled,
+        shiftHeld: shiftHeld,
         isSignedIn: function () {
             return googleUser() !== null
         },

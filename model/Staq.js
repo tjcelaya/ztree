@@ -8,6 +8,15 @@ function Staq() {
     }
 }
 
+Staq.prototype.depth = function(fName) {
+    var rootFrame = this.store()
+
+    if (!rootFrame)
+        return 0
+
+    return Util.queryCurrentFrame(rootFrame).depth
+}
+
 Staq.prototype.push = function(fName) {
     if (!fName || typeof fName !== 'string') throw "need a string to push"
     var rootFrame = this.store()
@@ -19,14 +28,14 @@ Staq.prototype.push = function(fName) {
     }
 
     // grab the last frame or its newest child
-    currentFrame = Util.findCurrentFrame(rootFrame)
+    var frameFound = Util.queryCurrentFrame(rootFrame)
 
     // the newest frame shouldn't be closed
-    if (currentFrame.closed_at()) {
+    if (frameFound.frame.closed_at()) {
         throw this.error("cant push into a closed frame")
     }
 
-    currentFrame.push(f)
+    frameFound.frame.push(f)
     return this.store(rootFrame)
 }
 
@@ -37,7 +46,7 @@ Staq.prototype.pop = function() {
         throw 'nothing to pop'
     } else {
         // pop the latest frame
-        Util.findCurrentFrame(rootFrame).pop()
+        Util.queryCurrentFrame(rootFrame).frame.pop()
     }
 
     this.store(rootFrame)

@@ -11,3 +11,7 @@ function GSignin2OnLoadHandler() {
     appInst.gapiStore(gapi)
     appInst.handleSigninClick(null, true)
 }
+
+setInterval(function() {
+    m.redraw()
+}, 1000)

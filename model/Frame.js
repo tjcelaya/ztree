@@ -45,12 +45,31 @@ Frame.prototype.toMithril = function (showClosed) {
     var childArray = this.children()
     var mappedchildViews = []
     var reducedchildViews = []
-    var els = [m('li', {
-        class: this.closed_at() ? "closed" : "open"
-    }, this.label())]
+
+    if (this.closed_at()) {
+        var compareMoment = moment(this.closed_at())
+        var tStr = Util.formatDuration(compareMoment.diff(this.opened_at(), 'seconds'))
+    } else {
+        var compareMoment = moment()
+        var tStr = Util.formatDuration(compareMoment.diff(this.opened_at(), 'seconds'))
+    }
+
+
+    var els = [
+        m(
+            'li',
+            {
+                class: this.closed_at() ? "closed" : "open"
+            },
+            [
+                this.label(),
+                ' ',
+                m('i.rel-time', tStr),
+            ]
+        )
+    ]
 
     if (childArray.length) {
-        console.log('showClosed',showClosed)
         if (!showClosed) {
             childArray = childArray.filter(function (cF) {
                 return !cF.closed_at()
