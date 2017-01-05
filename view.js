@@ -52,7 +52,7 @@ function AppView(ctrl) {
                     m('span.label-body', 'Show Closed'),
                 ]),
             ]),
-            m('.column.one-quarter', [
+            m('.column.one-quarter.u-hide', [
                 m('label', [
                     m("input", {
                         key: 1,
