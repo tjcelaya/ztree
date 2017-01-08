@@ -5,10 +5,10 @@ function AppView(ctrl) {
 
             if (1 == ctrl.staq.depth() && !ctrl.shiftHeld()) {
                 console.log('popping current since detect shift')
-                ctrl.handlePop()
+                ctrl.handlePopClick()
             }
 
-            ctrl.handlePush()
+            ctrl.handlePushClick()
             return false
         }
     }, [
@@ -16,7 +16,7 @@ function AppView(ctrl) {
             m('.column.one-quarter', [
                 m('button.button-primary.u-full-width', {
                     type: 'button',
-                    onclick: ctrl.handlePop
+                    onclick: ctrl.handlePopClick
                 }, 'pop'),
             ]),
             m('.column.one-half', [
@@ -36,7 +36,7 @@ function AppView(ctrl) {
             m('.column.one-quarter', [
                 m('button.u-full-width', {
                     type: 'button',
-                    onclick: ctrl.handlePush
+                    onclick: ctrl.handlePushClick
                 }, 'push'),
             ]),
         ]),
@@ -63,10 +63,10 @@ function AppView(ctrl) {
                     m('span.label-body', 'Show Debug'),
                 ]),
             ]),
-            m('.column.one-quarter.u-hide', [
+            m('.column.one-quarter', [
                 m('span', ctrl.lastMessage()),
             ]),
-            m('.column.u-hide', {
+            m('.column', {
                 'class': (ctrl.isSignedIn() ? 'three' : 'u-hide'),
             },[
                 m('button', {
@@ -79,7 +79,7 @@ function AppView(ctrl) {
                     onclick: ctrl.handleSignoutClick
                 }, 'Sign Out'),
             ]),
-            m('.column.three.u-hide', {
+            m('.column.three', {
                 'class': (ctrl.isSignedIn() ? 'u-hide' : ''),
             },[
                 m('#signin.u-pull-right')

@@ -13,7 +13,7 @@ function AppController() {
 
     // var store = new Store()
     function handleSignInWithGoogleUser(gUser) {
-        console.log('handleSignInWithGoogleUser)')
+        console.log('handleSignInWithGoogleUser')
         if (!gapiStore()) {
             lastMessage('initialization issue!?')
             return
@@ -51,7 +51,7 @@ function AppController() {
         handleSaveClick: function () {
             lastMessage('nyi')
         },
-        handlePush: function (e) {
+        handlePushClick: function (e) {
             try {
                 staq.push(newFrame())
                 newFrame('')
@@ -60,7 +60,7 @@ function AppController() {
                 lastMessage(e)
             }
         },
-        handlePop: function (e) {
+        handlePopClick: function (e) {
             try {
                 staq.pop()
             } catch (e) {
