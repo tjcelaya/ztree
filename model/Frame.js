@@ -31,7 +31,7 @@ Frame.prototype.push = function (f) {
 Frame.prototype.pop = function () {
     var cA = this.children()
     if (cA.length && !this.childrenClosed()) {
-
+        console.log('skipping something?')
     } else {
         this.closed_at(Util.ISONow())
     }
@@ -54,19 +54,25 @@ Frame.prototype.isClosed = function () {
     return this.closed_at() && this.childrenClosed()
 }
 
+Frame.prototype.isCurrent = function() {
+    return !this.closed_at() && this.childrenClosed()
+}
+
 Frame.prototype.toMithril = function (showClosed) {
     var childArray = this.children()
     var mappedchildViews = []
     var reducedchildViews = []
+    var pushIcon = popIcon = null
+    var compareMoment = moment()
 
     if (this.closed_at()) {
         var compareMoment = moment(this.closed_at())
-        var tStr = Util.formatDuration(compareMoment.diff(this.opened_at(), 'seconds'))
-    } else {
-        var compareMoment = moment()
-        var tStr = Util.formatDuration(compareMoment.diff(this.opened_at(), 'seconds'))
+    } else if (this.isCurrent()) {
+        pushIcon = m('.fa.fa-sign-in')
+        popIcon = m('.fa.fa-sign-out')
     }
 
+    var tStr = Util.formatDuration(compareMoment.diff(this.opened_at(), 'seconds'))
 
     var els = [
         m(
@@ -75,13 +81,13 @@ Frame.prototype.toMithril = function (showClosed) {
                 class: this.closed_at() ? "closed" : "open"
             },
             [
+                pushIcon,
+                ' ',
                 this.label(),
                 ' ',
                 m('i.rel-time', tStr),
-                !this.closed_at()
-                    && !this.children().length
-                    && m('.fa.fa-sign-out')
-                    || '',
+                ' ',
+                popIcon,
             ]
         )
     ]

@@ -1,5 +1,7 @@
 const Util = {}
 
+Util.APP_VERSION = 's-v1.0.0'
+
 Util.AuthHandler = function () {
     debugger
 }
@@ -23,7 +25,6 @@ Util.queryCurrentFrame = function (frame, depth) {
     if (children.length === 0
         || lastborn.isClosed()
     ) {
-        console.log('found current frame ' + frame.id)
         return {
             frame: frame,
             depth: depth

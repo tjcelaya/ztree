@@ -2,38 +2,31 @@ function AppView(ctrl) {
 
     return m('form.container', {
         onsubmit: function () {
-
-            if (1 == ctrl.staq.depth() && !ctrl.shiftHeld()) {
-                console.log('popping current since detect shift')
-                ctrl.handlePopClick()
-            }
-
-            ctrl.handlePushClick()
-            return false
+            return ctrl.handleSubmit()
         }
     }, [
         m('.le-input.row', [
-            m('.column.one-quarter', [
+            m('.input-btn-pop.columns.two', [
                 m('button.button-primary.u-full-width', {
                     type: 'button',
                     onclick: ctrl.handlePopClick
                 }, 'pop'),
             ]),
-            m('.column.one-half', [
+            m('.input-text-frame.columns.eight', [
                 m('input.u-full-width', {
                     type: 'text',
-                    oninput: m.withAttr('value', ctrl.newFrame),
-                    value: ctrl.newFrame(),
+                    oninput: m.withAttr('value', ctrl.vm.newFrame),
+                    value: ctrl.vm.newFrame(),
                     config: function (el, skipBinding, cxt) {
                         if (skipBinding) return;
 
                         el.addEventListener('keydown', function (e) {
-                            ctrl.shiftHeld(e.shiftKey)
+                            ctrl.vm.shiftHeld(e.shiftKey)
                         })
                     }
                 }),
             ]),
-            m('.column.one-quarter', [
+            m('.input-btn-push.columns.two', [
                 m('button.u-full-width', {
                     type: 'button',
                     onclick: ctrl.handlePushClick
@@ -41,58 +34,58 @@ function AppView(ctrl) {
             ]),
         ]),
         m('.le-extras.row', [
-            m('.column.one-quarter', [
+            m('.input-check-showclosed.columns.two', [
                 m('label', [
                     m("input", {
                         key: 1,
                         type: "checkbox",
                         onclick: ctrl.handleShowClosedToggle,
-                        checked: ctrl.showClosed()
+                        checked: ctrl.vm.showClosed()
                     }),
                     m('span.label-body', 'Show Closed'),
                 ]),
             ]),
-            m('.column.one-quarter', [
+            m('.input-check-showdebug.columns.two', [
                 m('label', [
                     m("input", {
                         key: 1,
                         type: "checkbox",
                         onclick: ctrl.handleShowDebugToggle,
-                        checked: ctrl.showDebug()
+                        checked: ctrl.vm.showDebug()
                     }),
                     m('span.label-body', 'Show Debug'),
                 ]),
             ]),
-            m('.column.one-quarter', [
-                m('span', ctrl.lastMessage()),
+            m('.output-check-lastmessage.column.four', [
+                m('span', ctrl.vm.lastMessage()),
             ]),
-            m('.column', {
-                'class': (ctrl.isSignedIn() ? 'three' : 'u-hide'),
-            },[
-                m('button', {
-                    type: 'button',
-                    'class': (ctrl.driveEnabled() ? 'u-pull-left' : 'u-hide'),
-                    onclick: ctrl.handleSaveClick
-                }, 'Save'),
-                m('button.u-pull-right', {
+            m('.input-btn-authbutton.column.two',[
+                m('button.u-full-width', {
+                    'class': ctrl.isSignedIn() || 'u-hide' || '',
                     type: 'button',
                     onclick: ctrl.handleSignoutClick
                 }, 'Sign Out'),
+                m('#signin', {
+                    'class': ctrl.isSignedIn() && 'u-hide' || 'u-pull-right'
+                }, null)
             ]),
-            m('.column.three', {
-                'class': (ctrl.isSignedIn() ? 'u-hide' : ''),
+            m('.input-btn-save.column.two', {
+                'class': ctrl.saveEnabled() ? '' : 'u-hide'
             },[
-                m('#signin.u-pull-right')
+                m('button.u-full-width', {
+                    type: 'button',
+                    onclick: ctrl.handleSaveClick
+                }, 'Save'),
             ]),
         ]),
         m('.le-output.row', [
             m('.column', {
-                class: ctrl.showDebug() ? 'one-half' : 'u-full-width'
+                class: ctrl.vm.showDebug() ? 'one-half' : 'u-full-width'
             },[
-                ctrl.staq.toMithril(ctrl.showClosed()),
+                ctrl.staq.toMithril(ctrl.vm.showClosed()),
             ]),
             m('.column', {
-                class: ctrl.showDebug() ? 'one-half' : 'u-hide'
+                class: ctrl.vm.showDebug() ? 'one-half' : 'u-hide'
             },[
                 m('pre', JSON.stringify(ctrl.staq, null, 4))
             ]),
