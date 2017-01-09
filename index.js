@@ -22,9 +22,11 @@ setInterval(function() {
     m.redraw()
 }, 1000)
 
-// setTimeout(function() {
-//     appInst.handleSaveClick
-// })
+
+setInterval(function() {
+    console.log('sync staq to local every 10s')
+    Store.getManager('local').sync('test', appInst.staq().toJSON())
+}, 10000)
 
 //initialize
 var appInst = m.mount(document.getElementById('app'), appDefinition);

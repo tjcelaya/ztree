@@ -2,15 +2,15 @@ const Util = {}
 
 Util.APP_VERSION = 's-v1.0.0'
 
-Util.AuthHandler = function () {
+Util.AuthHandler = function() {
     debugger
 }
 
-Util.ISONow = function () {
+Util.ISONow = function() {
     return (new Date).toISOString()
 }
 
-Util.queryCurrentFrame = function (frame, depth) {
+Util.queryCurrentFrame = function(frame, depth) {
     depth = depth || 0
 
     if (!frame || !frame instanceof Frame) throw 'no frame given'
@@ -34,6 +34,11 @@ Util.queryCurrentFrame = function (frame, depth) {
     return Util.queryCurrentFrame(lastborn, depth + 1)
 }
 
-Util.formatDuration = function (seconds) {
-    return seconds < 60 ? (seconds + 's') : moment.duration(seconds).humanize()
+Util.formatDuration = function(milliseconds) {
+    var duration = moment.duration(milliseconds)
+    var seconds = duration.as('seconds')
+
+    return seconds < 60
+        ? (Math.round(seconds) + 's')
+        : duration.humanize()
 }

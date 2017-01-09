@@ -21,10 +21,19 @@ span {
     /*font-size: 0.9rem;*/
 }
 
+.grey {
+    color: grey;
+}
+
 li.closed {
     color: grey;
 }
+
 .rel-time {
     color: grey;
     font-size: 0.8em;
+}
+
+ul {
+    list-style-type: none;
 }

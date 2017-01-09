@@ -76,7 +76,12 @@ Frame.prototype.toMithril = function (showClosed) {
     }
 
     suffix = ' ago'
-    var tStr = prefix + Util.formatDuration(compareMoment.diff(this.opened_at(), 'seconds')) + suffix
+    var tStr = prefix + Util.formatDuration(compareMoment.diff(this.opened_at())) + suffix
+
+    var lastborn = this.children()[this.children().length - 1]
+    var haveCurrentFrame = !this.childrenClosed()
+        && Util.queryCurrentFrame(lastborn).frame == lastborn
+        // we have open children and our latest child is the current frame
 
     var els = [
         m(
@@ -85,13 +90,9 @@ Frame.prototype.toMithril = function (showClosed) {
                 class: this.closed_at() ? "closed" : "open"
             },
             [
-                pushIcon,
-                ' ',
                 this.label(),
                 ' ',
                 m('i.rel-time', tStr),
-                ' ',
-                popIcon,
             ]
         )
     ]
@@ -107,6 +108,16 @@ Frame.prototype.toMithril = function (showClosed) {
             return childFrame.toMithril(showClosed)
         })
         els.push(m('ul', childFrames))
+    }
+
+
+    if (!this.isClosed()) {
+        if (this.childrenClosed()) {
+            els[0].children.push(' ⌥↩', m('br'), '↩')
+        } else if (haveCurrentFrame) {
+            // have children, last is open
+            els.push(m('li.action-return', '⇪↩'))
+        }
     }
 
     return els

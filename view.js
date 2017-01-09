@@ -1,6 +1,23 @@
 function AppView(ctrl) {
 
+    var kitchenSinkHelper = function (visibleSinkClass, hiddenSinkClass) {
+        return ctrl.vm.altHeld() ? visibleSinkClass : hiddenSinkClass
+    }
+
     return m('form.container', {
+        config: function (el, skipBinding, cxt) {
+            if (skipBinding) return;
+
+            function handleKeyEvent(e) {
+                console.log('keyevent')
+                ctrl.vm.shiftHeld(e.shiftKey)
+                ctrl.vm.altHeld(e.altKey || e.metaKey)
+                m.redraw()
+            }
+
+            el.addEventListener('keydown', handleKeyEvent)
+            el.addEventListener('keyup', handleKeyEvent)
+        },
         onsubmit: function () {
             return ctrl.handleSubmit()
         }
@@ -18,12 +35,9 @@ function AppView(ctrl) {
                     oninput: m.withAttr('value', ctrl.vm.newFrame),
                     value: ctrl.vm.newFrame(),
                     config: function (el, skipBinding, cxt) {
-                        if (skipBinding) return;
-
-                        el.addEventListener('keydown', function (e) {
-                            ctrl.vm.shiftHeld(e.shiftKey)
-                            ctrl.vm.altHeld(e.altKey || e.metaKey)
-                        })
+                        if (skipBinding) return
+                        el.focus()
+                        ctrl.inputEl(el)
                     }
                 }),
             ]),
@@ -35,7 +49,7 @@ function AppView(ctrl) {
             ]),
         ]),
         m('.le-extras.row', [
-            m('.input-check-showclosed.columns.two', [
+            m('.input-check-showclosed.columns.' + kitchenSinkHelper('two', 'u-hide'), [
                 m('label', [
                     m("input", {
                         key: 1,
@@ -46,7 +60,7 @@ function AppView(ctrl) {
                     m('span.label-body', 'Show Closed'),
                 ]),
             ]),
-            m('.input-check-showdebug.columns.two', [
+            m('.input-check-showdebug.columns.' + kitchenSinkHelper('two', 'u-hide'), [
                 m('label', [
                     m("input", {
                         key: 1,
@@ -57,10 +71,10 @@ function AppView(ctrl) {
                     m('span.label-body', 'Show Debug'),
                 ]),
             ]),
-            m('.output-check-lastmessage.column.four', [
+            m('.output-check-lastmessage.columns.' + kitchenSinkHelper('four', 'u-hide'), [
                 m('span', ctrl.vm.lastMessage()),
             ]),
-            m('.input-btn-authbutton.column.two',[
+            m('.input-btn-authbutton.columns.' + kitchenSinkHelper('two', 'u-hide'), [
                 m('button.u-full-width', {
                     'class': ctrl.isSignedIn() || 'u-hide' || '',
                     type: 'button',
@@ -70,7 +84,7 @@ function AppView(ctrl) {
                     'class': ctrl.isSignedIn() && 'u-hide' || 'u-pull-right'
                 }, null)
             ]),
-            m('.input-btn-save.column.one', {
+            m('.input-btn-save.column.' + kitchenSinkHelper('one', 'one-half'), {
                 'class': ctrl.saveEnabled() ? '' : 'u-hide'
             },[
                 m('button.tiny.u-full-width', {
@@ -78,7 +92,7 @@ function AppView(ctrl) {
                     onclick: ctrl.handleSaveClick
                 }, 'Save'),
             ]),
-            m('.input-btn-save.column.one', {
+            m('.input-btn-save.column.' + kitchenSinkHelper('one', 'one-half'), {
                 'class': ctrl.saveEnabled() ? '' : 'u-hide'
             },[
                 m('button.tiny.u-full-width', {
@@ -91,12 +105,12 @@ function AppView(ctrl) {
             m('.column', {
                 class: ctrl.vm.showDebug() ? 'one-half' : 'u-full-width'
             },[
-                ctrl.staq.toMithril(ctrl.vm.showClosed()),
+                ctrl.staq().toMithril(ctrl.vm.showClosed()),
             ]),
             m('.column', {
                 class: ctrl.vm.showDebug() ? 'one-half' : 'u-hide'
             },[
-                m('pre', JSON.stringify(ctrl.staq, null, 4))
+                m('pre', JSON.stringify(ctrl.staq(), null, 4))
             ]),
         ]),
     ]);

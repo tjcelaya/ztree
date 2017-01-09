@@ -1,21 +1,21 @@
 function AppController() {
-    var staq = new Staq()
-    staq.push('main')
+    var staq = m.prop(new Staq())
+    staq().push('main')
     var vm = new ViewModel()
     var googleUser = m.prop(null)
     var gapiInst = m.prop(null)
+    var inputEl = m.prop()
 
     Store.registerManager('local', new LocalStore(Util.APP_VERSION))
     Store.registerManagerBuilder('drive', GDriveStore)
     Store.registerManagerBuilder('calendar', GCalStore)
 
-    Store.getManager('local').sync('test', staq)
-
     var cachedStaq = Store.getManager('local').load('test')
     if (cachedStaq) {
-        staq = Staq.fromJSON(cachedStaq)
+        staq(Staq.fromJSON(cachedStaq))
     }
-    Store.getManager('local').sync('test', staq)
+
+    Store.getManager('local').sync('test', staq())
 
     function handleSignInWithGoogleUser(gUser) {
         console.log('handleSignInWithGoogleUser')
@@ -39,6 +39,7 @@ function AppController() {
         staq: staq,
         gapiInst: gapiInst,
         vm: vm,
+        inputEl: inputEl,
         saveEnabled: function () {
             return Store.ready()
         },
@@ -48,39 +49,47 @@ function AppController() {
         handleSignInWithGoogleUser: handleSignInWithGoogleUser,
         handleSaveClick: function () {
             if (Store.ready()) {
-                Store.getManager('local').sync('test', this.staq.toJSON())
+                Store.getManager('local').sync('test', staq().toJSON())
             }
-            //GCalStore.save(gapiInst(), this.staq.toJSON())
+            //GCalStore.save(gapiInst(), staq().toJSON())
         },
         handleClearClick: function () {
-            this.staq = new Staq()
-            this.staq.push('main')
-            Store.getManager('local').sync('test', this.staq.toJSON())
+            console.log('attempting to clear')
+            var s = new Staq()
+
+            s.push('main')
+            Store.getManager('local').sync('test', s.toJSON())
+            staq(s)
+            inputEl() && inputEl().focus()
             m.redraw()
-            //GCalStore.save(gapiInst(), this.staq.toJSON())
+            //GCalStore.save(gapiInst(), staq().toJSON())
         },
         handlePushClick: function (e) {
             try {
-                this.staq.push(vm.newFrame())
+                staq().push(vm.newFrame())
                 vm.newFrame('')
             } catch (e) {
-                this.staq.error(e)
+                staq().error(e)
                 vm.lastMessage(e)
             }
+            inputEl() && inputEl().focus()
         },
         handlePopClick: function (e) {
             try {
-                this.staq.pop()
+                staq().pop()
             } catch (e) {
-                this.staq.error(e)
+                staq().error(e)
                 vm.lastMessage(e)
             }
+            inputEl() && inputEl().focus()
         },
         handleShowClosedToggle: function (e) {
             vm.showClosed(!vm.showClosed())
+            inputEl() && inputEl().focus()
         },
         handleShowDebugToggle: function (e) {
             vm.showDebug(!vm.showDebug())
+            inputEl() && inputEl().focus()
         },
         handleSigninClick: function (e, immediate) {
             if (immediate) {
@@ -103,6 +112,7 @@ function AppController() {
                     },
                 })
             }
+            inputEl() && inputEl().focus()
         },
         handleSignoutClick: function (e) {
             vm.lastMessage('trying to sign out...')
@@ -116,6 +126,7 @@ function AppController() {
                     googleUser(null)
                     m.redraw()
                 });
+            inputEl() && inputEl().focus()
         },
         handleSubmit: function (e) {
             if (vm.altHeld()) {
@@ -126,11 +137,13 @@ function AppController() {
 
             if (vm.shiftHeld()) {
                 this.handlePopClick()
+                this.handlePopClick()
+                this.handlePushClick()
                 console.log('popping current since detect shift')
                 return false
             }
 
-            if (!vm.shiftHeld() && 0 != this.staq.depth()) {
+            if (!vm.shiftHeld() && 0 != staq().depth()) {
                 this.handlePopClick()
             }
 
