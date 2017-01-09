@@ -22,6 +22,7 @@ function AppView(ctrl) {
 
                         el.addEventListener('keydown', function (e) {
                             ctrl.vm.shiftHeld(e.shiftKey)
+                            ctrl.vm.altHeld(e.altKey || e.metaKey)
                         })
                     }
                 }),
@@ -69,13 +70,21 @@ function AppView(ctrl) {
                     'class': ctrl.isSignedIn() && 'u-hide' || 'u-pull-right'
                 }, null)
             ]),
-            m('.input-btn-save.column.two', {
+            m('.input-btn-save.column.one', {
                 'class': ctrl.saveEnabled() ? '' : 'u-hide'
             },[
-                m('button.u-full-width', {
+                m('button.tiny.u-full-width', {
                     type: 'button',
                     onclick: ctrl.handleSaveClick
                 }, 'Save'),
+            ]),
+            m('.input-btn-save.column.one', {
+                'class': ctrl.saveEnabled() ? '' : 'u-hide'
+            },[
+                m('button.tiny.u-full-width', {
+                    type: 'button',
+                    onclick: ctrl.handleClearClick
+                }, 'Clear'),
             ]),
         ]),
         m('.le-output.row', [

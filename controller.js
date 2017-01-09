@@ -1,5 +1,6 @@
 function AppController() {
     var staq = new Staq()
+    staq.push('main')
     var vm = new ViewModel()
     var googleUser = m.prop(null)
     var gapiInst = m.prop(null)
@@ -8,14 +9,11 @@ function AppController() {
     Store.registerManagerBuilder('drive', GDriveStore)
     Store.registerManagerBuilder('calendar', GCalStore)
 
+    Store.getManager('local').sync('test', staq)
+
     var cachedStaq = Store.getManager('local').load('test')
     if (cachedStaq) {
         staq = Staq.fromJSON(cachedStaq)
-    } else {
-        staq.push('main')
-        staq.push('main1')
-        staq.pop()
-        staq.push('main2')
     }
     Store.getManager('local').sync('test', staq)
 
@@ -50,24 +48,31 @@ function AppController() {
         handleSignInWithGoogleUser: handleSignInWithGoogleUser,
         handleSaveClick: function () {
             if (Store.ready()) {
-                Store.getManager('local').sync('test', staq.toJSON())
+                Store.getManager('local').sync('test', this.staq.toJSON())
             }
-            //GCalStore.save(gapiInst(), staq.toJSON())
+            //GCalStore.save(gapiInst(), this.staq.toJSON())
+        },
+        handleClearClick: function () {
+            this.staq = new Staq()
+            this.staq.push('main')
+            Store.getManager('local').sync('test', this.staq.toJSON())
+            m.redraw()
+            //GCalStore.save(gapiInst(), this.staq.toJSON())
         },
         handlePushClick: function (e) {
             try {
-                staq.push(vm.newFrame())
+                this.staq.push(vm.newFrame())
                 vm.newFrame('')
             } catch (e) {
-                staq.error(e)
+                this.staq.error(e)
                 vm.lastMessage(e)
             }
         },
         handlePopClick: function (e) {
             try {
-                staq.pop()
+                this.staq.pop()
             } catch (e) {
-                staq.error(e)
+                this.staq.error(e)
                 vm.lastMessage(e)
             }
         },
@@ -113,13 +118,19 @@ function AppController() {
                 });
         },
         handleSubmit: function (e) {
+            if (vm.altHeld()) {
+                console.log('single push since detect alt')
+                this.handlePushClick()
+                return false
+            }
+
             if (vm.shiftHeld()) {
                 this.handlePopClick()
                 console.log('popping current since detect shift')
                 return false
             }
 
-            if (!vm.shiftHeld() && 0 != staq.depth()) {
+            if (!vm.shiftHeld() && 0 != this.staq.depth()) {
                 this.handlePopClick()
             }
 

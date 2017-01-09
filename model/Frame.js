@@ -64,15 +64,19 @@ Frame.prototype.toMithril = function (showClosed) {
     var reducedchildViews = []
     var pushIcon = popIcon = null
     var compareMoment = moment()
+    var prefix = suffix = ''
 
     if (this.closed_at()) {
         var compareMoment = moment(this.closed_at())
+        prefix = 'finished '
     } else if (this.isCurrent()) {
-        pushIcon = m('.fa.fa-sign-in')
+        pushIcon = m('.fa.fa-sign-out.fa-flip-horizontal')
         popIcon = m('.fa.fa-sign-out')
+        prefix = 'started '
     }
 
-    var tStr = Util.formatDuration(compareMoment.diff(this.opened_at(), 'seconds'))
+    suffix = ' ago'
+    var tStr = prefix + Util.formatDuration(compareMoment.diff(this.opened_at(), 'seconds')) + suffix
 
     var els = [
         m(

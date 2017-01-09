@@ -1,5 +1,5 @@
 li {
-    font-size: 0.6em;
+    /*font-size: 0.6em;*/
     margin-bottom: 0.5rem;
 }
 ul ul {
@@ -7,12 +7,18 @@ ul ul {
 }
 @media (max-width: 900px) {
     button {
-       padding: 0rem;
+        padding: 0rem;
     }
 }
 
+button.tiny {
+    margin: auto;
+    display: block;
+    padding: 0rem 0.5rem;
+}
+
 span {
-    font-size: 0.9rem;
+    /*font-size: 0.9rem;*/
 }
 
 li.closed {
