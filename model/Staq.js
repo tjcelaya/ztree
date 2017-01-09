@@ -1,15 +1,23 @@
-function Staq() {
-    this.error = m.prop('')
-    this.store = m.prop(null)
-    this.goal = m.prop('')
+function Staq(goal, error, root) {
+    this.goal = m.prop(goal || '')
+    this.error = m.prop(error || '')
+    this.root = m.prop(root || null)
     var id = 0
     this.nextId = function () {
-         return id++
+        return id++
     }
 }
 
+Staq.fromJSON = function(primitive) {
+    return new Staq(
+        primitive.goal,
+        primitive.error,
+        Frame.fromJSON(primitive.root)
+        )
+}
+
 Staq.prototype.depth = function(fName) {
-    var rootFrame = this.store()
+    var rootFrame = this.root()
 
     if (!rootFrame)
         return 0
@@ -17,14 +25,14 @@ Staq.prototype.depth = function(fName) {
     return Util.queryCurrentFrame(rootFrame).depth
 }
 
-Staq.prototype.push = function(fName) {
+Staq.prototype.push = function(fName, fTime) {
     if (!fName || typeof fName !== 'string') throw "need a string to push"
-    var rootFrame = this.store()
-    var f = new Frame(this.nextId(), fName, Util.ISONow())
+    var rootFrame = this.root()
+    var f = new Frame(this.nextId(), fName, fTime || Util.ISONow())
 
     if (!rootFrame) {
         // store the root frame
-        return this.store(f)
+        return this.root(f)
     }
 
     // grab the last frame or its newest child
@@ -36,11 +44,11 @@ Staq.prototype.push = function(fName) {
     }
 
     frameFound.frame.push(f)
-    return this.store(rootFrame)
+    return this.root(rootFrame)
 }
 
 Staq.prototype.pop = function() {
-    var rootFrame = this.store()
+    var rootFrame = this.root()
 
     if (!rootFrame) {
         throw 'nothing to pop'
@@ -49,19 +57,19 @@ Staq.prototype.pop = function() {
         Util.queryCurrentFrame(rootFrame).frame.pop()
     }
 
-    this.store(rootFrame)
+    this.root(rootFrame)
 }
 
 Staq.prototype.toJSON = function () {
     return {
-        error: this.error(),
         goal: this.goal(),
-        stack: this.store()
+        error: this.error(),
+        root: this.root()
     }
 }
 
 Staq.prototype.toMithril = function(showClosed) {
-    var s = this.store()
+    var s = this.root()
 
     if (!s)
         return m('p', 'empty')
