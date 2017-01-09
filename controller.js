@@ -1,30 +1,37 @@
 function AppController() {
     var staq = new Staq()
-    var newFrame = m.prop('');
-    var showClosed = m.prop(false)
-    var showDebug = m.prop(false)
-    var lastMessage = m.prop('yo')
+    var vm = new ViewModel()
     var googleUser = m.prop(null)
-    var gapiStore = m.prop(null)
-    var driveEnabled = m.prop(false)
-    var shiftHeld = m.prop(false)
+    var gapiInst = m.prop(null)
 
-    staq.push('main')
+    Store.registerManager('local', new LocalStore(Util.APP_VERSION))
+    Store.registerManagerBuilder('drive', GDriveStore)
+    Store.registerManagerBuilder('calendar', GCalStore)
 
-    // var store = new Store()
+    var cachedStaq = Store.getManager('local').load('test')
+    if (cachedStaq) {
+        staq = Staq.fromJSON(cachedStaq)
+    } else {
+        staq.push('main')
+        staq.push('main1')
+        staq.pop()
+        staq.push('main2')
+    }
+    Store.getManager('local').sync('test', staq)
+
     function handleSignInWithGoogleUser(gUser) {
         console.log('handleSignInWithGoogleUser')
-        if (!gapiStore()) {
-            lastMessage('initialization issue!?')
+        if (!gapiInst()) {
+            vm.lastMessage('initialization issue!?')
             return
         }
 
         googleUser(gUser)
         var profile = gUser.getBasicProfile()
         if (profile) {
-            lastMessage('hello, ' + profile.getName())
+            vm.lastMessage('hello, ' + profile.getName())
         } else {
-            lastMessage('hello, stranger')
+            vm.lastMessage('hello, stranger')
         }
 
         m.redraw()
@@ -32,32 +39,28 @@ function AppController() {
 
     return {
         staq: staq,
-        newFrame: newFrame,
-        showClosed: showClosed,
-        showDebug: showDebug,
-        lastMessage: lastMessage,
-        gapiStore: gapiStore,
-        driveEnabled: driveEnabled,
-        shiftHeld: shiftHeld,
+        gapiInst: gapiInst,
+        vm: vm,
+        saveEnabled: function () {
+            return Store.ready()
+        },
         isSignedIn: function () {
             return googleUser() !== null
         },
-        enableSync: function () {
-            lastMessage('GDrive integration enabled')
-            m.redraw()
-            driveEnabled(true)
-        },
         handleSignInWithGoogleUser: handleSignInWithGoogleUser,
         handleSaveClick: function () {
-            lastMessage('nyi')
+            if (Store.ready()) {
+                Store.getManager('local').sync('test', staq.toJSON())
+            }
+            //GCalStore.save(gapiInst(), staq.toJSON())
         },
         handlePushClick: function (e) {
             try {
-                staq.push(newFrame())
-                newFrame('')
+                staq.push(vm.newFrame())
+                vm.newFrame('')
             } catch (e) {
                 staq.error(e)
-                lastMessage(e)
+                vm.lastMessage(e)
             }
         },
         handlePopClick: function (e) {
@@ -65,18 +68,18 @@ function AppController() {
                 staq.pop()
             } catch (e) {
                 staq.error(e)
-                lastMessage(e)
+                vm.lastMessage(e)
             }
         },
         handleShowClosedToggle: function (e) {
-            showClosed(!showClosed())
+            vm.showClosed(!vm.showClosed())
         },
         handleShowDebugToggle: function (e) {
-            showDebug(!showDebug())
+            vm.showDebug(!vm.showDebug())
         },
         handleSigninClick: function (e, immediate) {
             if (immediate) {
-                gapiStore().signin2.render('signin', {
+                gapiInst().signin2.render('signin', {
                     'scope': [
                         'profile',
                         'email',
@@ -85,36 +88,43 @@ function AppController() {
                     ].join(' '),
                     'theme': 'dark',
                     'onsuccess': function () {
-                        handleSignInWithGoogleUser(gapiStore().auth2.getAuthInstance().currentUser.get())
-                        lastMessage('trying to load drive api')
+                        googleUser(gapiInst().auth2.getAuthInstance().currentUser.get())
+                        vm.lastMessage('trying to load drive api')
                         m.redraw()
-                        gapiStore().client.load('drive', 'v3', function () {
-                            lastMessage('loaded drive api')
-                            m.redraw()
-                            appInst.enableSync()
-                        });
                     },
                     'onfailure': function () {
                         console.log('onfailure', arguments)
-                        lastMessage('problem loading user')
+                        vm.lastMessage('problem loading user')
                     },
                 })
             }
         },
         handleSignoutClick: function (e) {
-            lastMessage('trying to sign out...')
-            var auth = gapiStore()
+            vm.lastMessage('trying to sign out...')
+            var auth = gapiInst()
                 .auth2
                 .getAuthInstance();
 
             auth.signOut()
                 .then(function () {
-                    lastMessage('goodbye!')
+                    vm.lastMessage('goodbye!')
                     googleUser(null)
                     m.redraw()
                 });
         },
+        handleSubmit: function (e) {
+            if (vm.shiftHeld()) {
+                this.handlePopClick()
+                console.log('popping current since detect shift')
+                return false
+            }
 
+            if (!vm.shiftHeld() && 0 != staq.depth()) {
+                this.handlePopClick()
+            }
 
+            this.handlePushClick()
+            return false
+        }
     }
 }
