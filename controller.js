@@ -137,9 +137,11 @@ function AppController() {
 
             if (vm.shiftHeld()) {
                 this.handlePopClick()
-                this.handlePopClick()
+                if (staq().depth() > 0) {
+                    console.log('popping current since detect shift')
+                    this.handlePopClick()
+                }
                 this.handlePushClick()
-                console.log('popping current since detect shift')
                 return false
             }
 

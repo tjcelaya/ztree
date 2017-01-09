@@ -22,7 +22,7 @@ class Staq {
     depth(fName) {
         var rootFrame = this.root()
 
-        if (!rootFrame)
+        if (!rootFrame || rootFrame.isClosed())
             return 0
 
         return Util.queryCurrentFrame(rootFrame).depth

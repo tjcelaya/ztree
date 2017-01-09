@@ -85,34 +85,36 @@ function AppView(ctrl) {
                     'class': ctrl.isSignedIn() && 'u-hide' || 'u-pull-right'
                 }, null)
             ]),
-            m('.input-btn-save.column.' + kitchenSinkHelper('one', 'one-half'), {
+            m('.input-btn-save.tiny.column.' + kitchenSinkHelper('one', 'one-half'), {
                 'class': ctrl.saveEnabled() ? '' : 'u-hide'
             },[
-                m('button.tiny.u-full-width', {
+                m('button.u-full-width', {
                     type: 'button',
                     onclick: ctrl.handleSaveClick
                 }, 'Save'),
             ]),
-            m('.input-btn-save.column.' + kitchenSinkHelper('one', 'one-half'), {
+            m('.input-btn-save.tiny.column.' + kitchenSinkHelper('one', 'one-half'), {
                 'class': ctrl.saveEnabled() ? '' : 'u-hide'
             },[
-                m('button.tiny.u-full-width', {
+                m('button.u-full-width', {
                     type: 'button',
                     onclick: ctrl.handleClearClick
                 }, 'Clear'),
             ]),
         ]),
         m('.le-output.row', [
-            m('.column', {
-                class: ctrl.vm.showDebug() ? 'one-half' : 'u-full-width'
-            },[
-                ctrl.staq().toMithril(ctrl.vm.showClosed()),
-            ]),
-            m('.column', {
-                class: ctrl.vm.showDebug() ? 'one-half' : 'u-hide'
-            },[
-                m('pre', JSON.stringify(ctrl.staq(), null, 4))
-            ]),
+            m('.le-output-scroller.u-full-width', [
+                m('.column', {
+                    'class': ctrl.vm.showDebug() ? 'one-half' : 'u-full-width',
+                },[
+                    ctrl.staq().toMithril(ctrl.vm.showClosed() || ctrl.vm.metaHeld()),
+                ]),
+                m('.column', {
+                    class: ctrl.vm.showDebug() ? 'one-half' : 'u-hide'
+                },[
+                    m('pre', JSON.stringify(ctrl.staq(), null, 4))
+                ]),
+            ])
         ]),
     ]);
 }
