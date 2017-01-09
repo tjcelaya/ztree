@@ -1,9 +1,22 @@
-function Frame(id, label, start) {
+function Frame(id, label, opened_at, closed_at, children) {
     this.id = id
-    this.opened_at = m.prop(start),
-    this.closed_at = m.prop(null),
-    this.label = m.prop(label),
-    this.children = m.prop([]) // array of child Frames
+    this.opened_at = m.prop(opened_at)
+    this.closed_at = m.prop(closed_at || null)
+    this.label = m.prop(label)
+    this.children = m.prop(
+        children
+        && children.length
+        && children.map(Frame.fromJSON)
+        || []) // array of child Frames
+}
+
+Frame.fromJSON = function(primitive) {
+    return new Frame(
+        primitive.id,
+        primitive.label,
+        primitive.opened_at,
+        primitive.closed_at,
+        primitive.children)
 }
 
 // pushing a frame into a frame is simple, we add it to it's children
@@ -65,6 +78,10 @@ Frame.prototype.toMithril = function (showClosed) {
                 this.label(),
                 ' ',
                 m('i.rel-time', tStr),
+                !this.closed_at()
+                    && !this.children().length
+                    && m('.fa.fa-sign-out')
+                    || '',
             ]
         )
     ]
