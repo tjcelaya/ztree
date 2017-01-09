@@ -1,0 +1,24 @@
+li {
+    font-size: 0.6em;
+    margin-bottom: 0.5rem;
+}
+ul ul {
+    margin: 1rem 0 1rem 2rem;
+}
+@media (max-width: 900px) {
+    button {
+       padding: 0rem;
+    }
+}
+
+span {
+    font-size: 0.9rem;
+}
+
+li.closed {
+    color: grey;
+}
+.rel-time {
+    color: grey;
+    font-size: 0.8em;
+}
