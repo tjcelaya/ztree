@@ -1,7 +1,7 @@
 function AppView(ctrl) {
 
     var kitchenSinkHelper = function (visibleSinkClass, hiddenSinkClass) {
-        return ctrl.vm.altHeld() ? visibleSinkClass : hiddenSinkClass
+        return ctrl.vm.metaHeld() ? visibleSinkClass : hiddenSinkClass
     }
 
     return m('form.container', {
@@ -10,8 +10,9 @@ function AppView(ctrl) {
 
             function handleKeyEvent(e) {
                 console.log('keyevent')
+                ctrl.vm.altHeld(e.altKey)
+                ctrl.vm.metaHeld(e.metaKey)
                 ctrl.vm.shiftHeld(e.shiftKey)
-                ctrl.vm.altHeld(e.altKey || e.metaKey)
                 m.redraw()
             }
 

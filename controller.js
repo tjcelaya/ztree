@@ -130,7 +130,7 @@ function AppController() {
         },
         handleSubmit: function (e) {
             if (vm.altHeld()) {
-                console.log('single push since detect alt')
+                console.log('single push since detect meta')
                 this.handlePushClick()
                 return false
             }
